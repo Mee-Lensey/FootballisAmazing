@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a901100-e489-4715-986e-e2d0d54d5485" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MyGame.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Football.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GameLand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Hero.java" afterDir="false" />
-    </list>
+    <list default="true" id="7a901100-e489-4715-986e-e2d0d54d5485" name="Changes" comment="MyGame.iml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,6 +68,27 @@
       <option name="presentableId" value="Default" />
       <updated>1709236522029</updated>
     </task>
+    <task id="LOCAL-00001" summary="MyGame.iml">
+      <option name="closed" value="true" />
+      <created>1713314387953</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713314387953</updated>
+    </task>
+    <task id="LOCAL-00002" summary="MyGame.iml">
+      <option name="closed" value="true" />
+      <created>1713314443098</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713314443098</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="MyGame.iml" />
+    <option name="LAST_COMMIT_MESSAGE" value="MyGame.iml" />
   </component>
 </project>
