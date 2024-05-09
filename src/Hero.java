@@ -60,9 +60,9 @@ public class Hero {
         if(downPressed==true){
             dy=2;
         }else if (upPressed==true){
-            dy=2;
+            dy=-2;
         } else {
-            dy=2;
+            dy=0;
         }
 
         xpos = xpos+dx;

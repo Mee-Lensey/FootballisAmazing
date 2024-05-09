@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
+import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -60,12 +61,20 @@ public class GameLand implements Runnable, KeyListener {
 
     public Hero GreyDefender;
 
-    public Hero[] Football;
+    public Ball[] Football;
+
+    public int Score=0;
 
     //declare screen/level booleans
     public boolean startScreen = true;
     public boolean isPlaying;
     public boolean gameOver;
+
+    public long startTime;
+    public long elapsedTime;
+    public long currentTime;
+    public int counter=0;
+
 
 
     /**
@@ -73,11 +82,15 @@ public class GameLand implements Runnable, KeyListener {
      **/
 
     public Image backgroundpic;
-
     public Image Orangereceiver;
     public Image Greydefender;
-    private int KeyCode;
+    //public  int KeyCode;
     public Image FootballPic;
+    public boolean OrangeReceiverIsIntersectingFootball;
+    public boolean GreyDefenderIsIntersectingFootball;
+
+
+
 
 
     // Main method definition: PSVM
@@ -97,15 +110,23 @@ public class GameLand implements Runnable, KeyListener {
         //create (construct) the objects needed for the game below
         //for each object that has a picture, load in images as well
         /**Construct a specific Hero**/
-        GreyDefender=new Hero(60,90, 9, 9);
-        OrangeReceiver= new Hero(60,90, 9, 9);
+        GreyDefender=new Hero(60,90, 0, 0);
+        OrangeReceiver= new Hero(60,200, 0, 0);
 
 
         /**STEP 4 load in the image for your object **/
-        Greydefender = Toolkit.getDefaultToolkit().getImage("GreyDefender.png");
+        Greydefender = Toolkit.getDefaultToolkit().getImage("Greydefender.png");
         backgroundpic = Toolkit.getDefaultToolkit().getImage("Field.jpg");
         Orangereceiver = Toolkit.getDefaultToolkit().getImage("OrangeReceiver.png");
         FootballPic = Toolkit.getDefaultToolkit().getImage("Football.png");
+
+        Football=new Ball[10];
+
+        for(int i = 0; i<Football.length; i=i+1 ){
+            Football[i]=new Ball(200,600);
+        }
+
+
 
 
     }// GameLand()
@@ -121,17 +142,66 @@ public class GameLand implements Runnable, KeyListener {
         //for the moment we will loop things forever using a while loop
         while (true) {
             moveThings();  //move all the game objects
+            RandomMoves();
             collisions(); //checks for rec intersections
+            timer();
             render();  // paint the graphics
             pause(20); // sleep for 20 ms
+
         }
     }
 
     //paints things on the screen using bufferStrategy
-    public void collisions() {
+
+public void timer(){
+        currentTime=System.currentTimeMillis();
+        elapsedTime= (int)((currentTime-startTime)*.001);
+    //System.out.println(elapsedTime);
+
+}
+
+    public void collisions() { //this method causes something to happen when the football touches any of the heroes.
+        for(int i=0; i<Football.length; i=i+1){
+        if(OrangeReceiver.rec.intersects(Football[i].rec)&& GreyDefender.rec.intersects(Football[i].rec)){
+            OrangeReceiverIsIntersectingFootball=true;
+            GreyDefenderIsIntersectingFootball=true;
+            Score=Score+1;
+            Football[i].isAlive=false;
+
+
+
+        }
+
+
+
+        }
+
+
+
+
 
 
     }
+    public void RandomMoves() {
+
+        if(elapsedTime>3){
+            startTime=System.currentTimeMillis(); //this restarts the elapsed time from 0
+            int randomX = (int) (Math.random() * 5);
+            int randomY = (int) (Math.random() * 5)*(-1) ;
+            Football[counter].dx=randomX;
+            Football[counter].dy=randomY;
+            counter=counter+1;
+
+        }
+
+
+
+//
+//
+//
+
+    }
+
 
 
     public void render() {
@@ -153,8 +223,19 @@ public class GameLand implements Runnable, KeyListener {
         if (isPlaying==true) {
 
             g.drawImage(backgroundpic, 0, 0, 1000, 700, null);
+            g.drawString("HomeScore: "+ Score,900,50);
+            g.drawString("AwayScore: " + Score, 900, 70);
+            //g.drawRect(GreyDefender.xpos, GreyDefender.ypos, GreyDefender.width, GreyDefender.height);
+            //System.out.println(OrangeReceiver.xpos+", " +OrangeReceiver.ypos);
             g.drawImage(Greydefender, GreyDefender.xpos, GreyDefender.ypos, GreyDefender.width, GreyDefender.height, null);
-            g.drawImage(Orangereceiver, 200, 500, 90, 50, null);
+          // g.drawRect(OrangeReceiver.xpos, OrangeReceiver.ypos, OrangeReceiver.width, OrangeReceiver.height);
+            g.drawImage(Orangereceiver, OrangeReceiver.xpos, OrangeReceiver.ypos, OrangeReceiver.width, OrangeReceiver.height, null);
+
+            for (int i = 0; i < Football.length; i++) {
+               // System.out.println("the football is onscreen");
+              //  g.drawRect(Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height);
+                g.drawImage(FootballPic, Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height, null);
+            }
         }
 //        for (int i = 0; i < Football.length; i++) {
 //
@@ -173,6 +254,11 @@ public class GameLand implements Runnable, KeyListener {
         //call the move() method code from your object class
 
         GreyDefender.Keymove();
+        OrangeReceiver.Keymove();
+        for(int i=0; i<Football.length; i=i+1){
+            Football[i].move();
+        }
+
     }
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -223,17 +309,13 @@ public class GameLand implements Runnable, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         char key = e.getKeyChar();
-        int keyCode = e.getKeyCode();
-        System.out.println("key;" + key + ", KeyCode:" + keyCode);
+        int KeyCode = e.getKeyCode();
+        System.out.println("key;" + key + ", KeyCode:" + KeyCode);
         if (KeyCode == 68) { // d is 68 // right movement
             GreyDefender.rightPressed = true;
         }
         if (KeyCode == 65) {
             GreyDefender.leftPressed = true;
-        }
-        if (KeyCode == 68) {
-            GreyDefender.leftPressed = true;
-
         }
         if (KeyCode == 87) {
             GreyDefender.upPressed = true;
@@ -266,6 +348,7 @@ public class GameLand implements Runnable, KeyListener {
             if (KeyCode==32) {//32 is spacebar
                 startScreen = false;
                 isPlaying = true;
+                startTime=System.currentTimeMillis();
             }
             if (KeyCode == 68) { // d is 68 // right movement
                 GreyDefender.rightPressed = false;
@@ -279,7 +362,7 @@ public class GameLand implements Runnable, KeyListener {
             }
             if (KeyCode == 83) {//s=65
                 GreyDefender.downPressed = false;
-
+            }
                 if (KeyCode == 39) {//R arrow = 39
                     OrangeReceiver.rightPressed = false;
 
@@ -294,9 +377,9 @@ public class GameLand implements Runnable, KeyListener {
                 if (KeyCode == 40) {//R arrow = 39
                     OrangeReceiver.downPressed = false;
 
-
                 }
-            }
+
+
         }
 
     }
