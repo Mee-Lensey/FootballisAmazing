@@ -63,7 +63,9 @@ public class GameLand implements Runnable, KeyListener {
 
     public Ball[] Football;
 
-    public int Score=0;
+    public int OScore=0;
+
+    public int BScore = 0;
 
     //declare screen/level booleans
     public boolean startScreen = true;
@@ -84,6 +86,9 @@ public class GameLand implements Runnable, KeyListener {
     public Image backgroundpic;
     public Image Orangereceiver;
     public Image Greydefender;
+    public Image TooLittle;
+
+    public Image FootBallFrenzy;
     //public  int KeyCode;
     public Image FootballPic;
     public boolean OrangeReceiverIsIntersectingFootball;
@@ -110,8 +115,8 @@ public class GameLand implements Runnable, KeyListener {
         //create (construct) the objects needed for the game below
         //for each object that has a picture, load in images as well
         /**Construct a specific Hero**/
-        GreyDefender=new Hero(60,90, 0, 0);
-        OrangeReceiver= new Hero(60,200, 0, 0);
+        GreyDefender=new Hero(800,620, 3, 4);
+        OrangeReceiver= new Hero(800,620, 3, 4);
 
 
         /**STEP 4 load in the image for your object **/
@@ -119,11 +124,13 @@ public class GameLand implements Runnable, KeyListener {
         backgroundpic = Toolkit.getDefaultToolkit().getImage("Field.jpg");
         Orangereceiver = Toolkit.getDefaultToolkit().getImage("OrangeReceiver.png");
         FootballPic = Toolkit.getDefaultToolkit().getImage("Football.png");
+        TooLittle = Toolkit.getDefaultToolkit().getImage("TooLittle.jpg");
+        FootBallFrenzy= Toolkit.getDefaultToolkit().getImage("FootballFrenzy.png");
 
-        Football=new Ball[10];
+        Football=new Ball[50]; // I declare how many footballs will be thrown in the array
 
         for(int i = 0; i<Football.length; i=i+1 ){
-            Football[i]=new Ball(200,600);
+            Football[i]=new Ball(200,600); //this is where I make the object
         }
 
 
@@ -144,11 +151,16 @@ public class GameLand implements Runnable, KeyListener {
             moveThings();  //move all the game objects
             RandomMoves();
             collisions(); //checks for rec intersections
+            keepScore();
             timer();
             render();  // paint the graphics
             pause(20); // sleep for 20 ms
-
         }
+
+       // render();
+
+
+
     }
 
     //paints things on the screen using bufferStrategy
@@ -159,22 +171,54 @@ public void timer(){
     //System.out.println(elapsedTime);
 
 }
+public void keepScore(){
+    if (BScore>9|| OScore>9) {
+        gameOver = true;
+        System.out.println("B SCORE" + BScore);
+        System.out.println("O SCORE" + OScore);
 
-    public void collisions() { //this method causes something to happen when the football touches any of the heroes.
+    }
+}
+
+    public void collisions() { //this method causes something to happen when the football touches any of  the heroes.
         for(int i=0; i<Football.length; i=i+1){
-        if(OrangeReceiver.rec.intersects(Football[i].rec)&& GreyDefender.rec.intersects(Football[i].rec)){
-            OrangeReceiverIsIntersectingFootball=true;
-            GreyDefenderIsIntersectingFootball=true;
-            Score=Score+1;
-            Football[i].isAlive=false;
+
+            if (OrangeReceiver.rec.intersects((Football[i].rec))) {
+
+                Football[i].xpos = (1200);
+                Football[i].ypos=(900);    //this method prints the score to the away or home side
+                OScore +=1;                 //Every time the user intersects the ball, the score gets added by one
+
+            }
+
+
+            if (GreyDefender.rec.intersects(Football[i].rec)){
+
+                Football[i].xpos = (1200);
+                Football[i].ypos=(900);       ///this method prints the score to the away or home side
+                BScore +=1;                               //Every time the user intersects the ball, the score gets added by one
+
+
+            }
+
+
+//            if(OrangeReceiver.rec.intersects(Football[i].rec) && !Football[i].isAlive){
+//            OrangeReceiverIsIntersectingFootball=true;
+//
+//            Football[i].isAlive = false;
+//
+//            System.out.println(Football[i].isAlive);
+
+
+
+
+
+
 
 
 
         }
 
-
-
-        }
 
 
 
@@ -184,7 +228,7 @@ public void timer(){
     }
     public void RandomMoves() {
 
-        if(elapsedTime>3){
+        if(elapsedTime>2){
             startTime=System.currentTimeMillis(); //this restarts the elapsed time from 0
             int randomX = (int) (Math.random() * 5);
             int randomY = (int) (Math.random() * 5)*(-1) ;
@@ -208,43 +252,40 @@ public void timer(){
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        //draw the image of your objects below:
-
-        /**Step 5 draw the image of your object to the screen**/
-        if(startScreen==true) {
-            g.drawString("press space bar to start", 400, 300);
+        if (startScreen) {
+            g.drawImage(FootBallFrenzy, 0,0, WIDTH,HEIGHT,null);
         }
 
-        if(gameOver==true){
-            //paint game over image to the screen
-            g.drawString("game over", 400, 300);
-
-        }
-        if (isPlaying==true) {
+        if (isPlaying == true) {
 
             g.drawImage(backgroundpic, 0, 0, 1000, 700, null);
-            g.drawString("HomeScore: "+ Score,900,50);
-            g.drawString("AwayScore: " + Score, 900, 70);
+            g.drawString("HomeScore: " + BScore, 900, 50);
+            g.drawString("AwayScore: " + OScore, 900, 70);
             //g.drawRect(GreyDefender.xpos, GreyDefender.ypos, GreyDefender.width, GreyDefender.height);
             //System.out.println(OrangeReceiver.xpos+", " +OrangeReceiver.ypos);
             g.drawImage(Greydefender, GreyDefender.xpos, GreyDefender.ypos, GreyDefender.width, GreyDefender.height, null);
-          // g.drawRect(OrangeReceiver.xpos, OrangeReceiver.ypos, OrangeReceiver.width, OrangeReceiver.height);
+            // g.drawRect(OrangeReceiver.xpos, OrangeReceiver.ypos, OrangeReceiver.width, OrangeReceiver.height);
             g.drawImage(Orangereceiver, OrangeReceiver.xpos, OrangeReceiver.ypos, OrangeReceiver.width, OrangeReceiver.height, null);
 
             for (int i = 0; i < Football.length; i++) {
-               // System.out.println("the football is onscreen");
-              //  g.drawRect(Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height);
-                g.drawImage(FootballPic, Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height, null);
+                if (Football[i].isAlive) {
+                    Football[i].isAlive = false;
+                    Football[i].rec.setLocation(200, 600);
+
+                } else {
+                    g.drawImage(FootballPic, Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height, null);
+                }
+                // System.out.println("the football is onscreen");
+                //  g.drawRect(Football[i].xpos, Football[i].ypos, Football[i].width, Football[i].height);
             }
+
         }
-//        for (int i = 0; i < Football.length; i++) {
-//
-//        }
+            if (gameOver == true) {
+                //paint game over image to the screen
+                g.drawImage(TooLittle, 0,0,WIDTH,HEIGHT,null);
+            }
 
-
-        //dispose the images each time(this allows for the illusion of movement).
         g.dispose();
-
         bufferStrategy.show();
 
     }

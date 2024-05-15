@@ -12,7 +12,7 @@ public class Ball {
     public int ypos;
     public int width;
     public int height;
-    public boolean isAlive;
+    public boolean isAlive = true;
     public int dx;
 
 

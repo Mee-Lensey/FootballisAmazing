@@ -17,6 +17,7 @@ public class Hero {
     public boolean leftPressed;
     public boolean upPressed;
     public boolean downPressed;
+    public boolean IsColliding=false;
 
     // a boolean to denote if the hero is alive or dead
     //DO NOW; ADD SPEED as parameters in this constructor
@@ -37,8 +38,8 @@ public class Hero {
     public Hero(){
         xpos =100;
         ypos=200;
-        dx=2;
-        dy=3;
+        dx=5;
+        dy=4;
         width=60;
         xpos=xpos+dx;
         ypos=ypos+dy;
@@ -47,20 +48,21 @@ public class Hero {
 
     }
     public void Keymove(){//this is the user control move method
-    //horizontal
+    int speed=6;
+        //horizontal
       if(rightPressed==true){
-          dx=2;
+          dx=speed;
 
       } else if (leftPressed==true){
-          dx=-2;
+          dx=-speed;
       } else{
           dx=0;
       }
     //vertical
         if(downPressed==true){
-            dy=2;
+            dy=speed;
         }else if (upPressed==true){
-            dy=-2;
+            dy=-speed;
         } else {
             dy=0;
         }
